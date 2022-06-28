@@ -20,4 +20,14 @@ A starter template for a React + Vite + Tailwind project with Context API setup.
 
 ## License
 
-    > MIT
+[MIT](https://choosealicense.com/licenses/mit/)
+
+## Version
+
+[]: # Version: 1.0.0
+
+This template is a work in progress. Although it is production ready, it is not yet complete. There will be more features added over time. Feel free to contribute!
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
