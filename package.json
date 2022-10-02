@@ -8,8 +8,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.27.2",
+    "decode-html": "^2.0.0",
+    "file-saver": "^2.0.5",
+    "html-react-parser": "^3.0.4",
+    "moment": "^2.29.4",
+    "primeicons": "^5.0.0",
+    "primereact": "^8.5.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-debounce-input": "^3.3.0",
+    "react-dom": "^18.0.0",
+    "react-uuid": "^1.0.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
