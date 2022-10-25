@@ -8,6 +8,8 @@ import { Dialog } from "primereact/dialog";
 import uuid from "react-uuid";
 import { getCommentsBySubredditPostId, getPostsBySubreddit } from "../../services/api/Feed";
 import parse from "html-react-parser";
+import { useLocalStorage } from "../../services/hooks/customHooks";
+import { useLocation } from "react-router-dom";
 
 export function FeedCard({
   post,
@@ -18,6 +20,7 @@ export function FeedCard({
   image = "https://diy-magazine.s3.amazonaws.com/d/diy/Artists/G/Girl-In-red/Girl-in-Red_-by-Chris-Almeida-1.png",
   video = "",
   blur = false,
+  setRefreshPosts,
 }) {
   const [blurToggle, setBlurToggle] = useState(blur);
   const [videoToggle, setVideoToggle] = useState(false);
@@ -26,6 +29,18 @@ export function FeedCard({
   const cardRef = useRef();
   const videoRef = useRef();
   const isInViewport = useIsInViewport(cardRef);
+  const [savedPosts, setSavedPosts] = useLocalStorage("savedPosts", []);
+  const [isSaved, setIsSaved] = useState(savedPosts.filter((item) => item.id === post.id).length > 0 ? true : false);
+
+  const handleBookmarkPost = (post) => {
+    const filteredPosts = savedPosts.filter((item) => item.id === post.id);
+    if (filteredPosts.length > 0) {
+      setSavedPosts(savedPosts.filter((item) => item.id !== post.id));
+    } else {
+      setSavedPosts([...savedPosts, post]);
+    }
+    setRefreshPosts((toggle) => !toggle);
+  };
 
   useEffect(() => {
     if (!isInViewport && blur) {
@@ -38,6 +53,10 @@ export function FeedCard({
       getCommentsBySubredditPostId(subreddit, id).then((data) => setComments(data));
     }
   }, [subreddit, id, commentToggle]);
+
+  useEffect(() => {
+    setIsSaved(savedPosts.filter((item) => item.id === post.id).length > 0 ? true : false);
+  }, [savedPosts]);
 
   return (
     <Card
@@ -55,6 +74,7 @@ export function FeedCard({
               <Image src={image} alt="Image Text" className=" object-contain " />
             )}
             <div className="text-white z-10 absolute top-0 right-0 m-5 flex flex-col items-center gap-4 bg-[#0000007d] backdrop-blur-3xl  w-max h-max p-2 rounded-md ">
+              <i className={`pi pi-${isSaved ? "bookmark-fill" : "bookmark"} cursor-pointer `} onClick={() => handleBookmarkPost(post)}></i>
               <i className="pi pi-comments cursor-pointer " onClick={() => setCommentToggle(true)}></i>
               <i
                 className={`pi pi-${blurToggle ? "eye" : "eye-slash"} cursor-pointer  `}
@@ -78,9 +98,7 @@ export function FeedCard({
             </div>
             {blurToggle && <div className="absolute  top-0 left-0 w-full h-full bg-transparent backdrop-blur-3xl "></div>}
           </div>
-        ) : (
-          ""
-        )
+        ) : null
       }
       footer={
         <>

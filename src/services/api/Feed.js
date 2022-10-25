@@ -49,4 +49,10 @@ const getCommentsBySubredditPostId = async (subreddit, id) => {
     .flatMap((item) => item)
     .map((item) => item.data);
 };
-export { getPostsBySubreddit, getCommentsBySubredditPostId };
+
+const getSubredditDetails = async (subreddit) => {
+  const data = await axios.get(`http://www.reddit.com/r/${subreddit}/about.json`);
+  return data?.data?.data?.header_img ? data.data.data.header_img : data.data.data.banner_img;
+};
+
+export { getPostsBySubreddit, getCommentsBySubredditPostId, getSubredditDetails };
